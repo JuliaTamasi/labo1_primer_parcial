@@ -9,7 +9,7 @@ static int utn_verifyNumArray(char array[]);
 static int utn_verifyCharArray(char *pArray);
 static int utn_verifyFloat(char array[]);
 static int isAlphaNumeric(char* pResult);
-
+static int isCuit(char* pResult);
 //ESTATICAS
 /*
  * \brief static function to use instead of scanf(); to pick up user data
@@ -202,12 +202,16 @@ int utn_getMenu(int *number, int retries, int max, int min)
 	{
 		do
 		{
-			printf( "Bienvenido. Elija una opcion:\n" //MENU INICIO
-					"1- ALTA\n"
-					"2- MODIFICACION\n"
-					"3- BAJA\n"
-					"4- REPORTE\n"
-					"5- SALIR");
+			printf( "*** Bienvenido ***\n- Elija una opcion:\n\n" //MENU INICIO
+					"[1] ALTA DE CLIENTE\n"
+					"[2] MODIFICAR DATOS DE UN CLIENTE\n"
+					"[3] BAJA DE UN CLIENTE\n"
+					"[4] PUBLICAR NUEVO AVISO\n"
+					"[5] PAUSAR PUBLICACION ACTIVA\n"
+					"[6] REANUDAR PUBLICACION PAUSADA\n"
+					"[7] IMPRIMIR LISTA DE CLIENTES\n"
+					"[8] INFORMES\n"
+					"[9] SALIR\n\n");
 			if (utn_myGets(textNumber, ARRAY_SIZE) == 0 && utn_verifyNumArray(textNumber) == 1)
 			{
 				*number = atoi(textNumber);
@@ -351,10 +355,12 @@ int utn_getAddress(char* msg, char* msgError, char *pResult, int attemps, int le
 }
 static int isCuit(char* pResult)
 {
-	int retorno = 1;
+	int result;
 	int i;
 	int dashCounter;
-	if(pResult != NULL){
+	if(pResult != NULL && strlen(pResult)>0 && pResult[2] == '-' && pResult[11] == '-')
+	{
+		result = 1;
 		for(i=0;pResult[i] != '\0';i++)
 		{
 			if(pResult[i] == '-')
@@ -363,39 +369,39 @@ static int isCuit(char* pResult)
 			}
 			if(dashCounter>2 || (pResult[i] != '-' && (pResult[i] > '9' || pResult[i] < '0')))
 			{
-				retorno = 0;
+				result = 0;
 				break;
 			}
 		}
 	}
-	return retorno;
+	return result;
 }
 
-int utn_getCuit(char* msg, char* msgError, int *pResult, int attemps)
+int utn_getCuit(char* msg, char* msgError, char *pResult, int len, int attemps)
 {
-	int retorno = -1;
-	char bufferString[ARRAY_SIZE];
-	int bufferInt;
-
-	if(msg != NULL && msgError != NULL && pResult != NULL && attemps >= 0)
+	int result = -1;
+	char bufferString[len];
+	if(msg != NULL && msgError != NULL && pResult != NULL && len>0 && attemps >= 0)
 	{
 		do
 		{
 			printf("%s", msg);
-			if(utn_myGets(bufferString, ARRAY_SIZE) == 0 && isCuit(bufferString) == 1)
+			if(utn_myGets(bufferString, len) == 0 && isCuit(bufferString) == 1)
 			{
-				bufferInt = atoi(bufferString);
-				*pResult = bufferInt;
-				retorno = 0;
+				strncpy(pResult,bufferString,len);
+				result = 0;
 				break;
 			}
 			else
 			{
 				printf("%s", msgError);
+				if(attemps>0)
+				{
+					printf("Le quedan %d intentos\n", attemps);
+				}
 				attemps--;
 			}
-
 		}while(attemps >= 0);
 	}
-	return retorno;
+	return result;
 }

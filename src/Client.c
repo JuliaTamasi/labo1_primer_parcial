@@ -14,6 +14,7 @@
 
 static int cli_generateNewId(void);
 static int cli_findEmptyIndex(Client* pArray, int len, int* emptyIndex);
+static int cli_findByCuit(Client* list, int len,char* cuit);
 
 /*\brief to generate a new ID to every log generated
  */
@@ -43,6 +44,25 @@ static int cli_findEmptyIndex(Client* pArray, int len, int* emptyIndex)
 				retorno = 0;
 				break;
 			}
+		}
+	}
+	return retorno;
+}
+/** \brief compares a CUIT with a CUIT of the array to know if it was previously entered
+ * \param Client* aClients, Pointer to Clients's array
+ * \param int len, Array lenght
+ * \param char* cuit, cuit to be compared
+ * \return Return (0) if CUIT already exists (-1) if not
+ */
+static int cli_findByCuit(Client* aClients, int len,char* cuit)
+{
+	int retorno = -1;
+	for(int i=0;i<len;i++)
+	{
+		if(strcmp(cuit,aClients[i].cuit)==0)
+		{
+			retorno = 0;
+			break;
 		}
 	}
 	return retorno;
@@ -88,7 +108,8 @@ int cli_addElement(Client* pArray, int len)
 	{
 		if( utn_getName("Ingrese el nombre del cliente: \n", "\nError\n", bufferClient.name, RETRIES, NAME_LEN)==0 &&
 			utn_getName("Ingrese el apellido del cliente: \n", "\nError\n", bufferClient.lastName, RETRIES, NAME_LEN)==0 &&
-			utn_getCuit("Ingrese el CUIT del cliente: \n", "\nError\n", bufferClient.cuit, CUIT_LEN, RETRIES)==0)
+			utn_getCuit("Ingrese el CUIT del cliente: \n", "\nError\n", bufferClient.cuit, CUIT_LEN, RETRIES)==0 &&
+			cli_findByCuit(pArray, len, bufferClient.cuit)!=0)
 		{
 			bufferClient.isEmpty = 0;
 			bufferClient.idClient = cli_generateNewId();

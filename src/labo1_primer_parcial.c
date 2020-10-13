@@ -33,6 +33,10 @@ int main(void) {
 							{
 								printf("\n[ALTA EXITOSA]\n\n");
 							}
+							else
+							{
+								printf("\n[ERROR. Intentelo nuevamente]\n\n");
+							}
 							break;
 					case 2:
 							if(cli_modifyClient(arrayClients, CLIENT_LEN)==0)

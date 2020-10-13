@@ -8,7 +8,11 @@
 
 #ifndef REPORT_H_
 #define REPORT_H_
+#include <stdio.h>
+#include <stdlib.h>
+#include "Advertisement.h"
+#include "Client.h"
 
-
-
+int rep_printClientsAndActiveAds (Client* aClients, int len, Advertisement* pArray, int lenAds);
+int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int lenAds);
 #endif /* REPORT_H_ */

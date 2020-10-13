@@ -22,9 +22,11 @@ typedef struct
 	int area;
 	int idClient;
 }Advertisement;
-int ad_printArray(Advertisement* pArray, int len);
 int ad_addElement(Advertisement* pArray, int len, Client* AClients, int lenClients);
 int ad_initArray(Advertisement* pArray, int len);
 int ad_printByClientId(Advertisement* pArray,int len,int idClient);
 int ad_removeAd(Advertisement* pArray, int len, int idClient);
+int ad_findIndexById(Advertisement* pArray, int len, int id);
+int ad_status(Advertisement *pArray, int len, Client *aClients, int lenClients, int chosenOption);
+int ad_arrayIsEmpty (Advertisement* pArray, int len);
 #endif /* ADVERTISEMENT_H_ */

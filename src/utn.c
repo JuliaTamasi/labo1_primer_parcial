@@ -101,14 +101,20 @@ static int utn_verifyCharArray(char *pArray)
 	}
 	return retorno;
 }
+/*
+ * \brief Verifies if given string as a pointer is a valid alphanumeric string
+ * \param char* pArray, string to be asses
+ * \return [1] if ok / [0] if error
+ */
 static int isAlphaNumeric(char* pResult)
 {
 	int retorno = 1;
 	int i;
-	if(pResult != NULL){
+	if(pResult != NULL)
+	{
 		for(i=0;pResult[i] != '\0';i++)
 		{
-			if((pResult[i] != ' ') && (pResult[i] < 'a' || pResult[i] > 'z') && (pResult[i] < 'A' || pResult[i] > 'Z') && (pResult[i] < '0' || pResult[i] > '9'))
+			if(pResult[i] != ' ' && (pResult[i] < 'a' || pResult[i] > 'z') && (pResult[i] < 'A' || pResult[i] > 'Z') && (pResult[i] < '0' || pResult[i] > '9') && pResult[i]!=',' && pResult[i]!='.')
 			{
 				retorno = 0;
 				break;
@@ -116,6 +122,34 @@ static int isAlphaNumeric(char* pResult)
 		}
 	}
 	return retorno;
+}
+/*
+ * \brief Verifies if given string as a pointer is a valid CUIT
+ * \param char* pArray, string to be asses
+ * \return [1] if ok / [0] if error
+ */
+static int isCuit(char* pResult)
+{
+	int result;
+	int i;
+	int dashCounter;
+	if(pResult != NULL && strlen(pResult)>0 && pResult[2] == '-' && pResult[11] == '-' && pResult[12]!='\0')
+	{
+		result = 1;
+		for(i=0;pResult[i] != '\0';i++)
+		{
+			if(pResult[i] == '-')
+			{
+				dashCounter++;
+			}
+			if(dashCounter>2 || (pResult[i] != '-' && (pResult[i] > '9' || pResult[i] < '0')))
+			{
+				result = 0;
+				break;
+			}
+		}
+	}
+	return result;
 }
 //PUBLICAS
 /* \ brief getName para pedirle al usuario que ingrese un caracter
@@ -150,41 +184,6 @@ int utn_getName(char message[], char errorMessage[], char* pResult, int attemps,
 	}
 	return retorno;
 }
-void utn_ordenarArray(int array[], int len)
-{
-	int indice;
-	int flagEstadoDesordenado = 1;
-	int aux;
-	while(flagEstadoDesordenado==1)
-	{
-		flagEstadoDesordenado=0;
-		for(indice=0 ; indice<(len-1) ; indice++)
-		{
-			if(array[indice] > array[indice+1])
-			{
-				// intercambiar (swap)
-				aux = array[indice];
-				array[indice] = array[indice+1];
-				array[indice+1] = aux;
-				flagEstadoDesordenado=1;
-			}
-		}
-	}
-}
-int utn_imprimirArray(int array[], int limite)
-{
-	int retorno = -1;
-	int i;
-	if(array!= NULL && limite > 0)
-	{
-		for (i=0; i<limite; i++)
-		{
-			printf("\nLa posicion es %d y el valor es: %d\n\n", i, array[i]);
-		}
-		retorno = 0;
-	}
-	return retorno;
-}
 /*
  * \brief Requests a number from the user that represents a menu option
  * \param number*, pointer to the memory space where the data obtained will be saved
@@ -202,7 +201,7 @@ int utn_getMenu(int *number, int retries, int max, int min)
 	{
 		do
 		{
-			printf( "*** Bienvenido ***\n- Elija una opcion:\n\n" //MENU INICIO
+			printf( "*** Bienvenido ***\n\n- Elija una opcion:\n\n" //MENU INICIO
 					"[1] ALTA DE CLIENTE\n"
 					"[2] MODIFICAR DATOS DE UN CLIENTE\n"
 					"[3] BAJA DE UN CLIENTE\n"
@@ -327,56 +326,14 @@ int utn_getNumberFloat(char *message, float *number, int attempts, int max, int 
 	}
 	return retorno;
 }
-int utn_getAddress(char* msg, char* msgError, char *pResult, int attemps, int len)
-{
-	int retorno = -1;
-	char bufferString[ARRAY_SIZE];
-
-	if(msg != NULL && msgError != NULL && pResult != NULL && attemps >= 0 && len>0)
-	{
-		do
-		{
-			printf("%s", msg);
-			if(utn_myGets(bufferString, ARRAY_SIZE) == 0 && isAlphaNumeric(bufferString) == 1 && strnlen(bufferString, sizeof(bufferString)) < len)
-			{
-				retorno = 0;
-				strncpy(pResult, bufferString, len);
-				break;
-			}
-			else
-			{
-				printf("%s", msgError);
-				attemps--;
-			}
-
-		}while(attemps >= 0);
-	}
-	return retorno;
-}
-static int isCuit(char* pResult)
-{
-	int result;
-	int i;
-	int dashCounter;
-	if(pResult != NULL && strlen(pResult)>0 && pResult[2] == '-' && pResult[11] == '-')
-	{
-		result = 1;
-		for(i=0;pResult[i] != '\0';i++)
-		{
-			if(pResult[i] == '-')
-			{
-				dashCounter++;
-			}
-			if(dashCounter>2 || (pResult[i] != '-' && (pResult[i] > '9' || pResult[i] < '0')))
-			{
-				result = 0;
-				break;
-			}
-		}
-	}
-	return result;
-}
-
+/* \brief asks user for a CUIT
+ * \param char* msg, message shown to user
+ * \param char* msgError, error message shown to user
+ * \param char* pResult, pointer to the memory space where the obtained CUIT will be saved
+ * \param int len, lenght of array
+ * \param int attempts, number of attempts for the user to write a valid CUIT
+ * \return [-1] if error / [0] if ok
+ * */
 int utn_getCuit(char* msg, char* msgError, char *pResult, int len, int attemps)
 {
 	int result = -1;
@@ -386,7 +343,7 @@ int utn_getCuit(char* msg, char* msgError, char *pResult, int len, int attemps)
 		do
 		{
 			printf("%s", msg);
-			if(utn_myGets(bufferString, len) == 0 && isCuit(bufferString) == 1)
+			if(utn_myGets(bufferString, len) == 0 && isCuit(bufferString) == 1 && strnlen(bufferString, sizeof(bufferString))<len)
 			{
 				strncpy(pResult,bufferString,len);
 				result = 0;
@@ -404,4 +361,38 @@ int utn_getCuit(char* msg, char* msgError, char *pResult, int len, int attemps)
 		}while(attemps >= 0);
 	}
 	return result;
+}
+/* \brief asks user for an alphanumeric string
+ * \param char* msg, message shown to user
+ * \param char* msgError, error message shown to user
+ * \param char* pResult, pointer to the memory space where the obtained string will be saved
+ * \param int attempts, number of attempts for the user to write a valid CUIT
+ * \param int len, lenght of array
+ * \return [-1] if error / [0] if ok
+ * */
+int utn_getStringAlphanumeric(char* msg, char* msgError, char *pResult, int attemps, int len)
+{
+    int retorno = -1;
+    char bufferString[ARRAY_SIZE];
+
+    if(msg != NULL && msgError != NULL && pResult != NULL && attemps >= 0)
+    {
+        do
+        {
+            printf("%s", msg);
+            if(utn_myGets(bufferString, ARRAY_SIZE) == 0 && isAlphaNumeric(bufferString) == 1 && strnlen(bufferString, sizeof(bufferString)) < len)
+            {
+                retorno = 0;
+                strncpy(pResult, bufferString, len);
+                break;
+            }
+            else
+            {
+                printf("%s", msgError);
+                attemps--;
+            }
+
+        }while(attemps >= 0);
+    }
+    return retorno;
 }

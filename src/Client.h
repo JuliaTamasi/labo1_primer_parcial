@@ -27,4 +27,6 @@ int cli_printArray(Client* pArray, int len);
 int cli_modifyClient (Client* pArray, int len);
 int cli_findIndexById(Client* pArray, int len, int id);
 int cli_removeClient(Client* pArray, int len, int idClient);
+int cli_printIndex(Client* pArray, int index);
+int cli_arrayIsEmpty (Client* pArray, int len);
 #endif /* CLIENT_H_ */

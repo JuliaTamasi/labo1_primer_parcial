@@ -29,13 +29,13 @@ int main(void) {
 				switch(chosenOption)
 				{
 					case 1:
-							/*if(client_addHardcode(arrayClients, CLIENT_LEN)==0)
+							if(client_addHardcode(arrayClients, CLIENT_LEN)==0)
 							{
 								printf("[Alta forzada]\n\n]");
 							}
 
-							break;*/
-							if(cli_addElement(arrayClients, CLIENT_LEN)==0)
+							break;
+							/*if(cli_addElement(arrayClients, CLIENT_LEN)==0)
 							{
 								printf("\n[ALTA EXITOSA]\n\n");
 							}
@@ -43,7 +43,7 @@ int main(void) {
 							{
 								printf("\n[ERROR. Intentelo nuevamente]\n\n");
 							}
-							break;
+							break;*/
 					case 2:
 							if(cli_modifyClient(arrayClients, CLIENT_LEN)==0)
 							{
@@ -66,12 +66,12 @@ int main(void) {
 							}
 							break;
 					case 4:
-							/*if(ad_addHardcode(arrayAds, QTY_AD)==0)
+							if(ad_addHardcode(arrayAds, QTY_AD)==0)
 							{
 								printf("[Alta forzada]\n");
 							}
-							break;*/
-							if(ad_addElement(arrayAds, QTY_AD, arrayClients, CLIENT_LEN)==0)
+							break;
+							/*if(ad_addElement(arrayAds, QTY_AD, arrayClients, CLIENT_LEN)==0)
 							{
 								printf("\n\n[Volviendo al menú...]\n\n");
 							}
@@ -79,7 +79,7 @@ int main(void) {
 							{
 								printf("[ERROR. Intentelo nuevamente]\n\n");
 							}
-							break;
+							break;*/
 					case 5:
 							if(ad_status(arrayAds, QTY_AD, arrayClients, CLIENT_LEN, 5)==0)
 							{

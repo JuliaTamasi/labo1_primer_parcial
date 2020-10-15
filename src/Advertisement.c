@@ -385,7 +385,7 @@ int ad_addHardcode(Advertisement* pArrayAds, int lenAds)
 								  "Se busca camarera para turno noche. Tel: 247458965.",
 								  "Busco novio, el mio me dejo ayer. Besitos.",
 								  "Deje el piano por la programacion."};
-		int ad_idCliente[]={5, 4, 3, 3, 1, 1};
+		int ad_idCliente[]={5, 4, 2, 2, 1, 1};
 		for(int i = 0; i < 6; i++)
 		{
 			ad_addData(pArrayAds, lenAds, ad_area[i], ad_text[i], ad_idCliente[i]);

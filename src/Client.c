@@ -15,6 +15,7 @@
 static int cli_generateNewId(void);
 static int cli_findEmptyIndex(Client* pArray, int len, int* emptyIndex);
 static int cli_findByCuit(Client* list, int len,char* cuit);
+static int client_addData(Client* aClients,int lenClients,char* ClientName, char* ClientLastName, char* ClientCuit);
 
 /*\brief to generate a new ID to every log generated
  */
@@ -305,9 +306,7 @@ int cli_removeClient(Client* pArray, int len, int idClient)
 {
 	int result = -1;
 	int bufferIndex;
-	int answer;
-	if( pArray!=NULL && len>0 && cli_arrayIsEmpty(pArray, len)==0 && utn_getNumber("\nDesea eliminar este cliente y todas sus publicaciones?\n[1] Si\n[2] No\n", &answer, RETRIES, 2, 1)==0 &&
-		answer==1)
+	if( pArray!=NULL && len>0 && cli_arrayIsEmpty(pArray, len)==0)
 	{
 		bufferIndex = cli_findIndexById(pArray, len, idClient);
 		if(bufferIndex>=0 && pArray[bufferIndex].isEmpty==0)
@@ -315,14 +314,41 @@ int cli_removeClient(Client* pArray, int len, int idClient)
 			pArray[bufferIndex].isEmpty = 1;
 			result = 0;
 		}
-		else
-		{
-			if(answer==2)
-			{
-				printf("\n\n[Volviendo al menú...]\n\n");
-				result=0;
-			}
-		}
 	}
 	return result;
+}
+//ALTA FORZADA
+
+int client_addHardcode(Client* aClients, int lenClients)
+{
+	int result = -1;
+	if(aClients != NULL && lenClients >0)
+	{
+		client_addData(aClients, lenClients, "Julia", "Tamasi", "27-39833418-9");
+		client_addData(aClients, lenClients, "Marcelo", "Tamasi", "25-13051806-6");
+		client_addData(aClients, lenClients, "Liliana", "Barzaghi", "27-11906885-8");
+		client_addData(aClients, lenClients, "Lucia", "Campana", "27-31568956-7");
+		client_addData(aClients, lenClients, "Gabriel", "Campana", "25-33265874-6");
+		result=0;
+	}
+	return result;
+}
+static int client_addData(Client* aClients,int lenClients,char* ClientName, char* ClientLastName, char* ClientCuit)
+{
+	int result = -1;
+	int emptyIndex;
+
+	if(aClients != NULL && lenClients >0 && ClientName != NULL && ClientLastName != NULL && ClientCuit != NULL )
+	{
+		if(cli_findEmptyIndex(aClients, lenClients, &emptyIndex)==0)
+		{
+				aClients[emptyIndex].idClient = cli_generateNewId();
+				aClients[emptyIndex].isEmpty = 0;
+				strncpy(aClients[emptyIndex].name,ClientName,NAME_LEN);
+				strncpy(aClients[emptyIndex].lastName,ClientLastName,NAME_LEN);
+				strncpy(aClients[emptyIndex].cuit,ClientCuit,CUIT_LEN);
+				result=0;
+		}
+	}
+    return result;
 }

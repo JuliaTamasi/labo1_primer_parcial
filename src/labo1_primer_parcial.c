@@ -29,6 +29,12 @@ int main(void) {
 				switch(chosenOption)
 				{
 					case 1:
+							/*if(client_addHardcode(arrayClients, CLIENT_LEN)==0)
+							{
+								printf("[Alta forzada]\n\n]");
+							}
+
+							break;*/
 							if(cli_addElement(arrayClients, CLIENT_LEN)==0)
 							{
 								printf("\n[ALTA EXITOSA]\n\n");
@@ -49,9 +55,8 @@ int main(void) {
 								cli_findIndexById(arrayClients, CLIENT_LEN, bufferIdClient) >-1 &&
 								ad_printByClientId(arrayAds, QTY_AD, bufferIdClient)==0)
 							{
-								if(cli_removeClient(arrayClients, CLIENT_LEN, bufferIdClient)==0)
+								if(ad_removeAd(arrayAds, QTY_AD, bufferIdClient)==0 && cli_removeClient(arrayClients, CLIENT_LEN, bufferIdClient)==0)
 								{
-									ad_removeAd(arrayAds, QTY_AD,bufferIdClient);
 									printf("[CLIENTE DADO DE BAJA EXITOSAMENTE]\n");
 								}
 							}
@@ -61,6 +66,11 @@ int main(void) {
 							}
 							break;
 					case 4:
+							/*if(ad_addHardcode(arrayAds, QTY_AD)==0)
+							{
+								printf("[Alta forzada]\n");
+							}
+							break;*/
 							if(ad_addElement(arrayAds, QTY_AD, arrayClients, CLIENT_LEN)==0)
 							{
 								printf("\n\n[Volviendo al menú...]\n\n");

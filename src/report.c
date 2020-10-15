@@ -9,9 +9,9 @@
 #include "utn.h"
 static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, Client* arrayClients, int lenClients, int* indexClientMoreAds);
 static int rep_calculateAreaWithMoreAds (Advertisement* arrayAds, int lenAds, int* area);
-static int rep_countPausedAds (Advertisement* pArray, int len, int* pausedAdsCounter);
+static int rep_countPausedAds (Advertisement* arrayAds, int len, int* pausedAdsCounter);
 static int rep_countAreaWithMoreAds (Advertisement* arrayAds, int lenAds, int area, int* counter);
-static int rep_countActiveAdsByClient (Advertisement* pArray, int len, int idClient, int* activeAdsCounter);
+static int rep_countActiveAdsByClient (Advertisement* arrayAds, int len, int idClient, int* activeAdsCounter);
 
 // FUNCIONES ESTATICAS
 /** \brief calculate which client has more ads
@@ -52,16 +52,16 @@ static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, C
  * \param int* activeAdsCounter, pointer to the memory space where the calculated value will be saved
  * \return (0) if OK or (-1) if [Invalid lenght or NULL pointer received or employee not found
  */
-static int rep_countActiveAdsByClient (Advertisement* pArray, int len, int idClient, int* activeAdsCounter)
+static int rep_countActiveAdsByClient (Advertisement* arrayAds, int len, int idClient, int* activeAdsCounter)
 {
 	int result = -1;
 	int i;
 	int bufferCounter=0;
-	if(pArray!=NULL && len>0 && activeAdsCounter!=NULL && idClient>0)
+	if(arrayAds!=NULL && len>0 && activeAdsCounter!=NULL && idClient>0)
 	{
 		for(i=0;i<len;i++)
 		{
-			if(pArray[i].isEmpty==0 && pArray[i].idClient==idClient && pArray[i].status==ACTIVE)
+			if(arrayAds[i].isEmpty==0 && arrayAds[i].idClient==idClient && arrayAds[i].status==ACTIVE)
 			{
 				bufferCounter++;
 			}
@@ -77,16 +77,16 @@ static int rep_countActiveAdsByClient (Advertisement* pArray, int len, int idCli
  * \param int* pausedAdsCounter, pointer to the memory space where the calculated value will be saved
  * \return (0) if OK or (-1) if [Invalid lenght or NULL pointer received or employee not found
  */
-static int rep_countPausedAds (Advertisement* pArray, int len, int* pausedAdsCounter)
+static int rep_countPausedAds (Advertisement* arrayAds, int len, int* pausedAdsCounter)
 {
 	int result = -1;
 	int i;
 	int bufferCounter=0;
-	if(pArray!=NULL && len>0 && pausedAdsCounter!=NULL)
+	if(arrayAds!=NULL && len>0 && pausedAdsCounter!=NULL)
 	{
 		for(i=0;i<len;i++)
 		{
-			if(pArray[i].isEmpty==0 && pArray[i].status==PAUSED)
+			if(arrayAds[i].isEmpty==0 && arrayAds[i].status==PAUSED)
 			{
 				bufferCounter++;
 			}
@@ -151,6 +151,8 @@ static int rep_countAreaWithMoreAds (Advertisement* arrayAds, int lenAds, int ar
 	*counter = bufferCounter;
 	return result;
 }
+
+//FUNCIONES PUBLICAS
 /** \brief print client data and its active ads
  * \param Client* aClients, Pointer to Clients's array
  * \param int len, Clients's array lenght

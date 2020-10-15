@@ -7,7 +7,7 @@
  */
 #include "report.h"
 #include "utn.h"
-static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, Client* arrayClients, int lenClients, int* indexClientMoreAds);
+static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, Client* arrayClients, int lenClients);
 static int rep_calculateAreaWithMoreAds (Advertisement* arrayAds, int lenAds, int* area);
 static int rep_countPausedAds (Advertisement* arrayAds, int len, int* pausedAdsCounter);
 static int rep_countAreaWithMoreAds (Advertisement* arrayAds, int lenAds, int area, int* counter);
@@ -17,12 +17,11 @@ static int rep_countActiveAdsByClient (Advertisement* arrayAds, int len, int idC
 /** \brief calculate which client has more ads
  * \param Advertisement* arrayAds, Pointer to Ads's array
  * \param int lenAds, Ads's array lenght
- * \param Client* aClients, Pointer to Clients's array
+ * \param Client* arrayClients, Pointer to Clients's array
  * \param int lenClients, Clients's array lenght
- * \param int* indexClientMoreAds pointer to the memory space where the client index will be saved
  * \return (0) if OK or (-1) if [Invalid lenght or NULL pointer received or employee not found
  */
-static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, Client* arrayClients, int lenClients, int* indexClientMoreAds)
+static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, Client* arrayClients, int lenClients)
 {
 	int result = -1;
 	int i;
@@ -31,6 +30,7 @@ static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, C
 	int bufferIndex;
 	if(arrayAds!=NULL && lenAds>0)
 	{
+		printf("Clientes con más avisos: \n\n");
 		for(i=0;i<lenClients;i++)
 		{
 			if( rep_countActiveAdsByClient(arrayAds, lenAds, arrayClients[i].idClient, &bufferClientWithMoreAds)==0 &&
@@ -41,7 +41,16 @@ static int rep_calculateClientWithMoreAds(Advertisement* arrayAds, int lenAds, C
 				result=0;
 			}
 		}
-		*indexClientMoreAds = bufferIndex;
+		cli_printIndex(arrayClients, bufferIndex);
+		for(int j=0; j<lenClients; j++)
+		{
+			if( rep_countActiveAdsByClient(arrayAds, lenAds, arrayClients[j].idClient, &bufferClientWithMoreAds)==0 && bufferClientWithMoreAds==clientWithMoreAds &&
+				bufferIndex != j)
+			{
+				cli_printIndex(arrayClients, j);
+				result = 0;
+			}
+		}
 	}
 	return result;
 }
@@ -194,7 +203,6 @@ int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int 
 {
 	int result = -1;
 	int chosenOption;
-	int bufferIndexClientWithMoreAds;
 	int pausedAdsCounter;
 	int areaWithMoreAds;
 	if( aClients!=NULL && lenClients>0 && arrayAds!=NULL && lenAds>0 && cli_arrayIsEmpty(aClients, lenClients)==0 && ad_arrayIsEmpty(arrayAds, lenAds)==0 &&
@@ -203,10 +211,8 @@ int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int 
 		switch(chosenOption)
 		{
 			case 1:
-					if(rep_calculateClientWithMoreAds(arrayAds, lenAds, aClients, lenClients, &bufferIndexClientWithMoreAds)==0)
+					if(rep_calculateClientWithMoreAds(arrayAds, lenAds, aClients, lenClients)==0)
 					{
-						cli_printIndex(aClients, bufferIndexClientWithMoreAds);
-						printf("[CLIENTE CON MÁS AVISOS]\n");
 						result = 0;
 					}
 					break;

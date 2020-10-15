@@ -305,28 +305,44 @@ int ad_status(Advertisement *arrayAds, int len, Client *aClients, int lenClients
     	bufferIndexClient = cli_findIndexById(aClients, lenClients, arrayAds[bufferIndexAd].idClient);
         if (chosenOption == 5)
         {
-        	if (arrayAds[bufferIndexAd].status==ACTIVE && cli_printIndex(aClients, bufferIndexClient)==0 && utn_getNumber("\n[¿Deseás pausar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1)==0 && answer==1)
+        	if ( arrayAds[bufferIndexAd].status==ACTIVE && cli_printIndex(aClients, bufferIndexClient)==0 && utn_getNumber("\n[¿Deseás pausar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1)==0 &&
+        		 answer==1)
         	{
         		arrayAds[bufferIndexAd].status = PAUSED;
         		result = 0;
             }
         	else
         	{
-        		printf("[Esta publicación ya está pausada]\n");
+        		if(answer==2)
+        		{
+        			printf("[Volviendo al menú...]\n");
+        		}
+        		else
+        		{
+					printf("[Esta publicación ya está pausada]\n");
+        		}
         	}
         }
         else
         {
             if (chosenOption == 6)
             {
-				if (arrayAds[bufferIndexAd].status==PAUSED && cli_printIndex(aClients, bufferIndexClient)==0 && utn_getNumber("\n[¿Deseás reanudar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1) == 0 && answer == 1)
+				if ( arrayAds[bufferIndexAd].status==PAUSED && cli_printIndex(aClients, bufferIndexClient)==0 && utn_getNumber("\n[¿Deseás reanudar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1) == 0 &&
+					 answer == 1)
 				{
 					arrayAds[bufferIndexAd].status = ACTIVE;
 					result = 0;
 				}
 				else
 				{
-					printf("[Esta publicación ya esta activa]\n\n");
+					if(answer==2)
+					{
+	        			printf("[Volviendo al menú...]\n");
+					}
+					else
+					{
+						printf("[Esta publicación ya esta activa]\n\n");
+					}
 				}
             }
         }
@@ -362,14 +378,15 @@ int ad_addHardcode(Advertisement* pArrayAds, int lenAds)
 	int result = -1;
 	if(pArrayAds != NULL && lenAds >0)
 	{
-		int ad_area[5]={3,2,2,1,4};
-		char ad_text[5][AD_LEN]={ "Se vende heladera.5000. Llamar a 1235480",
+		int ad_area[6]={3,2,2,1,4,2};
+		char ad_text[7][AD_LEN]={ "Se vende heladera.5000. Llamar a 1235480",
 								  "Venta Ford Ka. 30.000 KM. Tel: 3245546",
 								  "Feria americana en Lanus. Interesados comunicarse al 467654.",
 								  "Se busca camarera para turno noche. Tel: 247458965.",
-								  "Busco novio, el mio me dejo ayer. Besitos."};
-		int ad_idCliente[]={5, 2, 3, 4, 1};
-		for(int i = 0; i < 5; i++)
+								  "Busco novio, el mio me dejo ayer. Besitos.",
+								  "Deje el piano por la programacion."};
+		int ad_idCliente[]={5, 4, 3, 3, 1, 1};
+		for(int i = 0; i < 6; i++)
 		{
 			ad_addData(pArrayAds, lenAds, ad_area[i], ad_text[i], ad_idCliente[i]);
 			result = 0;

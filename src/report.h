@@ -15,4 +15,10 @@
 
 int rep_printClientsAndActiveAds (Client* aClients, int len, Advertisement* pArray, int lenAds);
 int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int lenAds);
+typedef struct
+{
+	int id;
+	int qtyAds;
+	int isEmpty;
+}AuxiliarClient;
 #endif /* REPORT_H_ */

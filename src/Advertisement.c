@@ -15,8 +15,6 @@
 static int ad_generateNewId(void);
 static int ad_findEmptyIndex(Advertisement* arrayAds, int len, int* emptyIndex);
 static int ad_printIndex(Advertisement* arrayAds, int index);
-static int ad_searchForActive(Advertisement* arrayAds, int len);
-static int ad_searchForPaused(Advertisement* arrayAds, int len);
 static int ad_printArray(Advertisement* arrayAds, int len);
 static int ad_addData(Advertisement* pArrayAds, int lenAds,int area, char* ad_text, int idClient);
 
@@ -83,50 +81,6 @@ static int ad_findEmptyIndex(Advertisement* arrayAds, int len, int* emptyIndex)
 		}
 	}
 	return retorno;
-}
-/**
- * \brief Function to search in the advertisement array if there's any active
- * \param Advertisement* arrayAds: Pointer to Advertisment's array
- * \param int len: Length of the array
- * \return (1) is there any ACTIVE status or (0) if not
- */
-static int ad_searchForActive(Advertisement* arrayAds, int len)
-{
-	int retornar = 0;
-	if(arrayAds != NULL && len > 0)
-	{
-		for(int i=0; i<len; i++)
-		{
-			if(arrayAds[i].status == ACTIVE)
-			{
-				retornar = 1;
-				break;
-			}
-		}
-	}
-	return retornar;
-}
-/**
- * \brief Function to search in the advertisement array if there's any paused
- * \param Advertisement* arrayAds: Pointer to Advertisment's array
- * \param int len: Length of the array
- * \return (1) is there any PAUSED status or (0) if not
- */
-static int ad_searchForPaused(Advertisement* arrayAds, int len)
-{
-	int retornar = 0;
-	if(arrayAds != NULL && len > 0)
-	{
-		for(int i=0; i<len; i++)
-		{
-			if(arrayAds[i].status == PAUSED)
-			{
-				retornar = 1;
-				break;
-			}
-		}
-	}
-	return retornar;
 }
 /* \brief print the content of the ads's array
  * \param arrayAds, Pointer to array
@@ -349,23 +303,30 @@ int ad_status(Advertisement *arrayAds, int len, Client *aClients, int lenClients
     {
     	bufferIndexAd = ad_findIndexById(arrayAds, len, bufferIdAd);
     	bufferIndexClient = cli_findIndexById(aClients, lenClients, arrayAds[bufferIndexAd].idClient);
-    	cli_printIndex(aClients, bufferIndexClient);
-        if (chosenOption == 5 && ad_searchForActive(arrayAds, len)==1)
+        if (chosenOption == 5)
         {
-        	if (utn_getNumber("\n[¿Deseás pausar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1)==0 && answer==1 && arrayAds[bufferIndexAd].status == ACTIVE)
+        	if (arrayAds[bufferIndexAd].status==ACTIVE && cli_printIndex(aClients, bufferIndexClient)==0 && utn_getNumber("\n[¿Deseás pausar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1)==0 && answer==1)
         	{
         		arrayAds[bufferIndexAd].status = PAUSED;
         		result = 0;
             }
+        	else
+        	{
+        		printf("[Esta publicación ya está pausada]\n");
+        	}
         }
         else
         {
-            if (chosenOption == 6 && ad_searchForPaused(arrayAds, len)==1)
+            if (chosenOption == 6)
             {
-				if (utn_getNumber("\n[¿Deseás reanudar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1) == 0 && answer == 1 && arrayAds[bufferIndexAd].status == PAUSED)
+				if (arrayAds[bufferIndexAd].status==PAUSED && cli_printIndex(aClients, bufferIndexClient)==0 && utn_getNumber("\n[¿Deseás reanudar este aviso?]\n[1]- Si\n[2]- No\n", &answer, RETRIES, 2, 1) == 0 && answer == 1)
 				{
 					arrayAds[bufferIndexAd].status = ACTIVE;
 					result = 0;
+				}
+				else
+				{
+					printf("[Esta publicación ya esta activa]\n\n");
 				}
             }
         }
@@ -428,6 +389,7 @@ static int ad_addData(Advertisement* pArrayAds, int lenAds,int area, char* ad_te
 				pArrayAds[emptyIndex].idAd = ad_generateNewId();
 				pArrayAds[emptyIndex].isEmpty = 0;
 				pArrayAds[emptyIndex].status = ACTIVE;
+				pArrayAds[emptyIndex].area = area;
 				strncpy(pArrayAds[emptyIndex].adText,ad_text,AD_LEN);
 				pArrayAds[emptyIndex].idClient = idClient;
 				result=0;

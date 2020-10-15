@@ -173,14 +173,14 @@ int cli_modifyClient (Client* pArray, int len)
 						}
 						case 3:
 						{
-								if(utn_getCuit("Ingrese el cuit del cliente\n", "ERROR. Ingrese un cuit valido\n", pArray[bufferIndex].cuit, CUIT_LEN, RETRIES)==0)
+								if(utn_getCuit("Ingrese el cuit del cliente\n", "ERROR. Ingrese un cuit valido\n", pArray[bufferIndex].cuit, CUIT_LEN, RETRIES)==0 && cli_findByCuit(pArray, len, pArray[bufferIndex].cuit)!=0)
 								{
 									printf("¡CUIT ingresado con exito!\nCuit: %s\n", pArray[bufferIndex].cuit);
 									result = 0;
 								}
 								else
 								{
-									printf("[ERROR. Intentelo nuevamente]\n");
+									printf("[ERROR. El CUIT pertenece a otro cliente]\n");
 								}
 								break;
 						}

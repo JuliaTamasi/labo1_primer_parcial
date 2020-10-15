@@ -242,3 +242,22 @@ int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int 
 	}
 	return result;
 }
+int ads_countTotalAds(Advertisement *pArray, int length, int idClient, int *totalAds)
+{
+   int result = -1;
+   int counter = 0;
+
+   if(pArray != NULL && length > 0 && totalAds != NULL && idClient > 0 )
+   {
+       for(int i=0 ; i<length ; i++){
+
+           if(pArray[i].isEmpty == 0 && pArray[i].idClient == idClient)
+           {
+               counter++;
+           }
+       }
+       *totalAds = counter;
+       result = 0;
+   }
+   return result;
+}

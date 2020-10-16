@@ -16,9 +16,6 @@ static int rep_countActiveAdsByClient (Advertisement* arrayAds, int len, int idC
 static int rep_countAdsByClient (Advertisement* arrayAds, int len, int idClient, int* adsCounter);
 static int rep_countPausedAdsByClient (Advertisement* arrayAds, int len, int idClient, int* pausedAdsCounter);
 static int rep_calculateClientWithMorePausedAds(Advertisement* arrayAds, int lenAds, Client* arrayClients, int lenClients);
-static int ad_searchForPaused(Advertisement* arrayAds, int len);
-static int ad_searchForActive(Advertisement* arrayAds, int len);
-
 // FUNCIONES ESTATICAS
 /** \brief calculate which client has more active ads
  * \param Advertisement* arrayAds, Pointer to Ads's array
@@ -34,9 +31,8 @@ static int rep_calculateClientWithMoreActiveAds(Advertisement* arrayAds, int len
 	int clientWithMoreAds;
 	int bufferClientWithMoreAds;
 	int bufferIndex;
-	if(arrayAds!=NULL && lenAds>0)
+	if(arrayAds!=NULL && lenAds>0 && ad_searchForActive(arrayAds, lenAds)==1)
 	{
-		printf("Clientes con más avisos activos: \n\n");
 		for(i=0;i<lenClients;i++)
 		{
 			if( rep_countActiveAdsByClient(arrayAds, lenAds, arrayClients[i].idClient, &bufferClientWithMoreAds)==0 &&
@@ -47,16 +43,17 @@ static int rep_calculateClientWithMoreActiveAds(Advertisement* arrayAds, int len
 				result=0;
 			}
 		}
-			cli_printIndex(arrayClients, bufferIndex);
-			for(int j=0; j<lenClients; j++)
+		printf("Clientes con más avisos activos: \n\n");
+		cli_printIndex(arrayClients, bufferIndex);
+		for(int j=0; j<lenClients; j++)
+		{
+			if( rep_countActiveAdsByClient(arrayAds, lenAds, arrayClients[j].idClient, &bufferClientWithMoreAds)==0 && bufferClientWithMoreAds==clientWithMoreAds &&
+				bufferIndex != j)
 			{
-				if( rep_countActiveAdsByClient(arrayAds, lenAds, arrayClients[j].idClient, &bufferClientWithMoreAds)==0 && bufferClientWithMoreAds==clientWithMoreAds &&
-					bufferIndex != j)
-				{
-					cli_printIndex(arrayClients, j);
-					result = 0;
-				}
+				cli_printIndex(arrayClients, j);
+				result = 0;
 			}
+		}
 	}
 	return result;
 }
@@ -272,13 +269,13 @@ static int rep_calculateClientWithMorePausedAds(Advertisement* arrayAds, int len
 	int clientWithMoreAds;
 	int bufferClientWithMoreAds;
 	int bufferIndex;
-	if(arrayAds!=NULL && lenAds>0)
+	if(arrayAds!=NULL && lenAds>0 && ad_searchForPaused(arrayAds, lenAds)==1)
 	{
 		printf("Clientes con más avisos pausados: \n\n");
 		for(i=0;i<lenClients;i++)
 		{
 			if( rep_countPausedAdsByClient(arrayAds, lenAds, arrayClients[i].idClient, &bufferClientWithMoreAds)==0 &&
-			  ( i==0||bufferClientWithMoreAds>clientWithMoreAds) && bufferClientWithMoreAds!=0)
+			  ( i==0||bufferClientWithMoreAds>clientWithMoreAds))
 			{
 				clientWithMoreAds = bufferClientWithMoreAds;
 				bufferIndex = i;
@@ -382,17 +379,17 @@ int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int 
 					}
 					break;
 			case 4:
-					if(ad_searchForActive(arrayAds, lenAds)==1 && rep_calculateClientWithMoreActiveAds(arrayAds, lenAds, aClients, lenClients)==0)
+					if(rep_calculateClientWithMoreActiveAds(arrayAds, lenAds, aClients, lenClients)==0)
 					{
 						result = 0;
 					}
 					else
 					{
-						printf("No hay avisos activos");
+						printf("No hay avisos activos\n");
 					}
 					break;
 			case 5:
-					if(ad_searchForPaused(arrayAds, lenAds)==1 && rep_calculateClientWithMorePausedAds(arrayAds, lenAds, aClients, lenClients)==0)
+					if(rep_calculateClientWithMorePausedAds(arrayAds, lenAds, aClients, lenClients)==0)
 					{
 						result = 0;
 					}
@@ -407,48 +404,4 @@ int rep_reports (Client* aClients, int lenClients, Advertisement* arrayAds, int 
 		}
 	}
 	return result;
-}
-/**
- * \brief Function to search in the advertisement array if there's any paused
- * \param Advertisement* arrayAds: Pointer to Advertisment's array
- * \param int len: Length of the array
- * \return (1) is there any PAUSED status or (0) if not
- */
-static int ad_searchForPaused(Advertisement* arrayAds, int len)
-{
-	int retornar = 0;
-	if(arrayAds != NULL && len > 0)
-	{
-		for(int i=0; i<len; i++)
-		{
-			if(arrayAds[i].status == PAUSED)
-			{
-				retornar = 1;
-				break;
-			}
-		}
-	}
-	return retornar;
-}
-/**
- * \brief Function to search in the advertisement array if there's any active
- * \param Advertisement* arrayAds: Pointer to Advertisment's array
- * \param int len: Length of the array
- * \return (1) is there any ACTIVE status or (0) if not
- */
-static int ad_searchForActive(Advertisement* arrayAds, int len)
-{
-	int retornar = 0;
-	if(arrayAds != NULL && len > 0)
-	{
-		for(int i=0; i<len; i++)
-		{
-			if(arrayAds[i].status == ACTIVE)
-			{
-				retornar = 1;
-				break;
-			}
-		}
-	}
-	return retornar;
 }

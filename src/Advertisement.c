@@ -17,7 +17,6 @@ static int ad_findEmptyIndex(Advertisement* arrayAds, int len, int* emptyIndex);
 static int ad_printIndex(Advertisement* arrayAds, int index);
 static int ad_printArray(Advertisement* arrayAds, int len);
 static int ad_addData(Advertisement* pArrayAds, int lenAds,int area, char* ad_text, int idClient);
-
 /*\brief to generate a new ID to every log generated
  */
 static int ad_generateNewId(void)
@@ -136,6 +135,7 @@ int ad_initArray(Advertisement* arrayAds, int len)
 		{
 			arrayAds[i].isEmpty = 1;
 			arrayAds[i].idAd = 0;
+			arrayAds[i].status = -1;
 		}
 		retorno=0;
 	}
@@ -371,6 +371,50 @@ int ad_findIndexById(Advertisement* arrayAds, int len, int id)
 		}
 	}
 	return result;
+}
+/**
+ * \brief Function to search in the advertisement array if there's any paused
+ * \param Advertisement* arrayAds: Pointer to Advertisment's array
+ * \param int len: Length of the array
+ * \return (1) is there any PAUSED status or (0) if not
+ */
+int ad_searchForPaused(Advertisement* arrayAds, int len)
+{
+	int retornar = 0;
+	if(arrayAds != NULL && len > 0)
+	{
+		for(int i=0; i<len; i++)
+		{
+			if(arrayAds[i].status == PAUSED)
+			{
+				retornar = 1;
+				break;
+			}
+		}
+	}
+	return retornar;
+}
+/**
+ * \brief Function to search in the advertisement array if there's any active
+ * \param Advertisement* arrayAds: Pointer to Advertisment's array
+ * \param int len: Length of the array
+ * \return (1) is there any ACTIVE status or (0) if not
+ */
+int ad_searchForActive(Advertisement* arrayAds, int len)
+{
+	int retornar = 0;
+	if(arrayAds != NULL && len > 0)
+	{
+		for(int i=0; i<len; i++)
+		{
+			if(arrayAds[i].status == ACTIVE)
+			{
+				retornar = 1;
+				break;
+			}
+		}
+	}
+	return retornar;
 }
 //HARDCODEO
 int ad_addHardcode(Advertisement* pArrayAds, int lenAds)

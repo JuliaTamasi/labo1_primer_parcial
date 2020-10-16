@@ -30,4 +30,6 @@ int ad_findIndexById(Advertisement* arrayAds, int len, int id);
 int ad_status(Advertisement *arrayAds, int len, Client *aClients, int lenClients, int chosenOption);
 int ad_arrayIsEmpty (Advertisement* arrayAds, int len);
 int ad_addHardcode(Advertisement* pArrayAds, int lenAds);
+int ad_searchForPaused(Advertisement* arrayAds, int len);
+int ad_searchForActive(Advertisement* arrayAds, int len);
 #endif /* ADVERTISEMENT_H_ */

@@ -1,0 +1,11 @@
+id_venta,id_cliente,cantidad_afiches,nombre_archivo,zona,estado
+1,1,10,twinpeaks.jpg,1,1
+10,1,50,jujipeante2.jpg,1,1
+2,2,10,LU.jpg,2,0
+8,2,60,LU.jpg,2,0
+9,2,60,LU.jpg,2,0
+3,3,30,BABI.jpg,1,0
+4,4,40,COCO.jpg,3,0
+5,5,350,LILIANA.jpg,1,1
+6,1,350,jujita.jpg,1,0
+7,2,20,luciapapana.jpg,1,1
